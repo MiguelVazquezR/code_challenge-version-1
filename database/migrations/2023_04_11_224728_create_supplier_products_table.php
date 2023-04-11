@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('product_id')->constrained();
-            $table->foreignId('supply_id')->constrained();
+            $table->foreignId('supply_id');
             $table->softDeletes();
 
             $table->timestamps();
