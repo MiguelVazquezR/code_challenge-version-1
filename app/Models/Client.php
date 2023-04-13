@@ -15,4 +15,10 @@ class Client extends Model
         'email'
     ];
     public $timestamps = false;
+
+    // relationships
+    public function order()
+    {
+        return $this->hasOne(Client::class);
+    }
 }

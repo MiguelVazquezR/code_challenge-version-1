@@ -18,5 +18,16 @@ class Product extends Model
         'quantity',
     ];
 
+    // relationships
+    public function orderDetail()
+    {
+        return $this->hasOne(OrderDetail::class);
+    }
+
+    public function suppliers()
+    {
+        return $this->belongsToMany(Supplier::class, 'supplier_products')->withTimestamps()->withPivot('deleted_at');
+    }
+
 
 }

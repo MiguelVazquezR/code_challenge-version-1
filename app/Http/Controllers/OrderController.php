@@ -39,7 +39,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order = orderResource::make($order);
+        $order = orderResource::make(Order::with('orderDetails')->firstWhere('id', $order->id));
 
         return $order;
     }
