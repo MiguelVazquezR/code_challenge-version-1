@@ -60,10 +60,27 @@ export default {
         };
     },
     methods: {
-        store() {
-            this.form.post(route('product.store'), {
-                onSuccess: () => this.$inertia.get(route('product.index'))
-            });
+        async store() {
+            // make request to store new register
+            try {
+                const response = await axios.post(route('product.store'), { 
+                    name: this.form.name,
+                    description: this.form.description,
+                    price: this.form.price,
+                    quantity: this.form.quantity 
+                });
+
+                // return to index if record created
+                if(response.status == 201) {
+                    this.$inertia.get(route('spa-product.index'));
+                }
+            } catch (error) {
+                if(error.response.status == 422) {
+                    console.log(error.response.data.errors);
+                    this.form.errors = error.response.data.errors;
+                }
+                console.log(error);
+            }
         }
     },
     components: {

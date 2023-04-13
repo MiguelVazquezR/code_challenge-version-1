@@ -64,10 +64,26 @@ export default {
         }
     },
     methods: {
-        store() {
-            this.form.post(route('order.store'), {
-                onSuccess: () => this.$inertia.get(route('order.index'))
-            });
+        async store() {
+            // make request to store new register
+            try {
+                const response = await axios.post(route('order.store'), { 
+                    order_number: this.form.order_number,
+                    status_id: this.form.status_id,
+                    client_id: this.form.client_id,
+                });
+
+                // return to index if record created
+                if(response.status == 201) {
+                    this.$inertia.get(route('spa-order.index'));
+                }
+            } catch (error) {
+                if(error.response.status == 422) {
+                    console.log(error.response.data.errors);
+                    this.form.errors = error.response.data.errors;
+                }
+                console.log(error);
+            }
         }
     },
     components: {

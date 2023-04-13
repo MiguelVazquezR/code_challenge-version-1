@@ -85,10 +85,26 @@ export default {
         };
     },
     methods: {
-        update() {
-            this.form.put(route('client.update', this.client.data.id), {
-                onSuccess: () => this.$inertia.get(route('client.index'))
-            });
+        async update() {
+            // make request to store new register
+            try {
+                const response = await axios.put(route('client.update', this.client_id), { 
+                    name: this.form.name,
+                    lastname: this.form.lastname,
+                    email: this.form.email,
+                });
+
+                // return to index if record updated correctly
+                if(response.status == 200) {
+                    this.$inertia.get(route('spa-client.index'));
+                }
+            } catch (error) {
+                if(error.response.status == 422) {
+                    console.log(error.response.data.errors);
+                    this.form.errors = error.response.data.errors;
+                }
+                console.log(error);
+            }
         },
         async deleteItem() {
             try {

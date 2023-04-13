@@ -53,10 +53,26 @@ export default {
         };
     },
     methods: {
-        store() {
-            this.form.post(route('client.store'), {
-                onSuccess: () => this.$inertia.get(route('client.index'))
-            });
+        async store() {
+            // make request to store new register
+            try {
+                const response = await axios.post(route('client.store'), { 
+                    name: this.form.name,
+                    lastname: this.form.lastname,
+                    email: this.form.email 
+                });
+
+                // return to index if record created
+                if(response.status == 201) {
+                    this.$inertia.get(route('spa-client.index'));
+                }
+            } catch (error) {
+                if(error.response.status == 422) {
+                    console.log(error.response.data.errors);
+                    this.form.errors = error.response.data.errors;
+                }
+                console.log(error);
+            }
         }
     },
     components: {

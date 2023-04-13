@@ -98,10 +98,26 @@ export default {
         };
     },
     methods: {
-        update() {
-            this.form.put(route('order.update', this.order.data.id), {
-                onSuccess: () => this.$inertia.get(route('order.index'))
-            });
+        async update() {
+            // make request to store new register
+            try {
+                const response = await axios.put(route('order.update', this.order_id), { 
+                    order_number: this.form.order_number,
+                    status_id: this.form.status_id,
+                    client_id: this.form.client_id,
+                });
+
+                // return to index if record updated correctly
+                if(response.status == 200) {
+                    this.$inertia.get(route('spa-order.index'));
+                }
+            } catch (error) {
+                if(error.response.status == 422) {
+                    console.log(error.response.data.errors);
+                    this.form.errors = error.response.data.errors;
+                }
+                console.log(error);
+            }
         },
         async deleteItem() {
             try {

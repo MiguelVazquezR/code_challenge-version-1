@@ -29,6 +29,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import { useForm } from '@inertiajs/vue3';
+import axios from 'axios';
 
 export default {
     data() {
@@ -41,10 +42,22 @@ export default {
         };
     },
     methods: {
-        store() {
-            this.form.post(route('supplier.store'), {
-                onSuccess: () => this.$inertia.get(route('supplier.index'))
-            });
+        async store() {
+            // make request to store new register
+            try {
+                const response = await axios.post(route('supplier.store'), { name: this.form.name });
+
+                // return to index if record created
+                if(response.status == 201) {
+                    this.$inertia.get(route('spa-supplier.index'));
+                }
+            } catch (error) {
+                if(error.response.status == 422) {
+                    console.log(error.response.data.errors);
+                    this.form.errors = error.response.data.errors;
+                }
+                console.log(error);
+            }
         }
     },
     components: {
