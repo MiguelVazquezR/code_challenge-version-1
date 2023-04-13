@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = OrderResource::collection(Order::all());
+
+        return $orders;
     }
 
     /**
@@ -20,7 +23,15 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'order_number' => 'required|string|max:45',
+            'status_id' => 'required',
+            'client_id' => 'required',
+        ]);
+
+        $created_order = Order::create($validated);
+
+        return $created_order;
     }
 
     /**
@@ -28,7 +39,9 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $order = orderResource::make($order);
+
+        return $order;
     }
 
     /**
@@ -36,7 +49,15 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        $validated = $request->validate([
+            'order_number' => 'required|string|max:45',
+            'status_id' => 'required',
+            'client_id' => 'required',
+        ]);
+
+        $updated_order = $order->update($validated);
+
+        return $updated_order;
     }
 
     /**
@@ -44,6 +65,8 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        $deleted_order = $order->delete();
+
+        return $deleted_order;
     }
 }

@@ -25,6 +25,29 @@ const switchToTeam = (team) => {
 const logout = () => {
     router.post(route('logout'));
 };
+
+const menues = [
+    {
+        label: 'Productos',
+        route_name: 'spa-product.index',
+        route_active: 'spa-product.*',
+    },
+    {
+        label: 'Clientes',
+        route_name: 'spa-client.index',
+        route_active: 'spa-client.*',
+    },
+    {
+        label: 'Ordenes',
+        route_name: 'spa-order.index',
+        route_active: 'spa-orders.*',
+    },
+    {
+        label: 'Proveedores',
+        route_name: 'spa-supplier.index',
+        route_active: 'spa-supplier.*',
+    },
+];
 </script>
 
 <template>
@@ -48,8 +71,8 @@ const logout = () => {
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                <NavLink v-for="(menu, index) in menues" :key="index" :href="route(menu.route_name)" :active="route().current(menu.route_active)">
+                                    {{menu.label}}
                                 </NavLink>
                             </div>
                         </div>
@@ -193,8 +216,8 @@ const logout = () => {
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
+                        <ResponsiveNavLink v-for="(menu, index) in menues" :key="index" :href="route(menu.route_name)" :active="route().current(menu.route_active)">
+                            {{ menu.label }}
                         </ResponsiveNavLink>
                     </div>
 

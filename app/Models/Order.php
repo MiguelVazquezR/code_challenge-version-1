@@ -11,6 +11,7 @@ class Order extends Model
 {
     use HasFactory, SoftDeletes;
 
+    //massive asignation
     protected $fillable = ['order_number', 'status_id', 'client_id'];
 
     // relationships

@@ -13,7 +13,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = ClientResource::collection(Client::paginate(20));
+        $clients = ClientResource::collection(Client::all());
 
         return $clients;
     }

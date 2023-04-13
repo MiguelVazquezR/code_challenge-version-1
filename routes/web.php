@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\SPA\ClientController;
+use App\Http\Controllers\SPA\OrderController;
+use App\Http\Controllers\SPA\ProductController;
+use App\Http\Controllers\SPA\SupplierController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,3 +37,10 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+
+// spa routes
+Route::resource('product', ProductController::class)->names('spa-product')->middleware('auth')->except(['store', 'update', 'destroy']);
+Route::resource('client', ClientController::class)->names('spa-client')->middleware('auth')->except(['store', 'update', 'destroy']);
+Route::resource('order', OrderController::class)->names('spa-order')->middleware('auth')->except(['store', 'update', 'destroy']);
+Route::resource('supplier', SupplierController::class)->names('spa-supplier')->middleware('auth')->except(['store', 'update', 'destroy']);

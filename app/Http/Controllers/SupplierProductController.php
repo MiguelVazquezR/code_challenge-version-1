@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SupplierProductResource;
 use App\Models\SupplierProduct;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,9 @@ class SupplierProductController extends Controller
      */
     public function index()
     {
-        //
+        $SupplierProducts = SupplierProductResource::collection(SupplierProduct::all());
+
+        return $SupplierProducts;
     }
 
     /**
@@ -20,30 +23,47 @@ class SupplierProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'product_id' => 'required',
+            'supply_id' => 'required',
+        ]);
+
+        $created_SupplierProduct = SupplierProduct::create($validated);
+
+        return $created_SupplierProduct;
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(SupplierProduct $supplierProduct)
+    public function show(SupplierProduct $SupplierProduct)
     {
-        //
+        $SupplierProduct = SupplierProductResource::make($SupplierProduct);
+
+        return $SupplierProduct;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SupplierProduct $supplierProduct)
+    public function update(Request $request, SupplierProduct $SupplierProduct)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:45',
+        ]);
+
+        $updated_SupplierProduct = $SupplierProduct->update($validated);
+
+        return $updated_SupplierProduct;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SupplierProduct $supplierProduct)
+    public function destroy(SupplierProduct $SupplierProduct)
     {
-        //
+        $deleted_SupplierProduct = $SupplierProduct->delete();
+
+        return $deleted_SupplierProduct;
     }
 }
