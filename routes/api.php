@@ -9,9 +9,11 @@ use App\Http\Controllers\SupplierProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('product', ProductController::class);
-Route::apiResource('client', ClientController::class);
-Route::apiResource('order', OrderController::class);
-Route::apiResource('order-detail', OrderDetailController::class);
-Route::apiResource('supplier', SupplierController::class);
-Route::apiResource('supplier-product', SupplierProductController::class);
+Route::middleware('auth:sanctum')->group(function(){
+    Route::apiResource('product', ProductController::class);
+    Route::apiResource('client', ClientController::class);
+    Route::apiResource('order', OrderController::class);
+    Route::apiResource('order-detail', OrderDetailController::class);
+    Route::apiResource('supplier', SupplierController::class);
+    Route::apiResource('supplier-product', SupplierProductController::class);
+});
