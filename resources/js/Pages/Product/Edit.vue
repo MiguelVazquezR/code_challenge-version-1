@@ -25,15 +25,30 @@
                     <div class="mb-2">
                         <InputLabel value="Descripcion" />
                         <textarea v-model="form.description" class="input w-full" required>
-                        </textarea>
+                            </textarea>
                         <InputError :message="form.errors.description" />
                     </div>
-                    <div class="flex justify-end">
-                        <PrimaryButton class="mt-3" :disabled="form.processing">Actualizar</PrimaryButton>
+                    <div class="flex justify-end mt-3">
+                        <DangerButton @click="show_confirmation = true">Eliminar</DangerButton>
+                        <PrimaryButton class="ml-1" :disabled="form.processing">Actualizar</PrimaryButton>
                     </div>
                 </form>
             </div>
         </div>
+        <!-- confirmation modal -->
+        <ConfirmationModal :show="show_confirmation" @close="show_confirmation = false">
+            <template #title>
+                Eliminar registro
+            </template>
+            <template #content>
+                ¿Desea continuar con la eliminación?
+            </template>
+            <template #footer>
+                <DangerButton @click="deleteItem">Eliminar</DangerButton>
+                <SecondaryButton @click="show_confirmation = false" class="ml-1">Cancelar
+                </SecondaryButton>
+            </template>
+        </ConfirmationModal>
     </AppLayout>
 </template>
 
@@ -45,6 +60,9 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import { useForm } from '@inertiajs/vue3';
+import DangerButton from '@/Components/DangerButton.vue';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+import axios from 'axios';
 
 export default {
     data() {
@@ -58,12 +76,13 @@ export default {
         return {
             product: [],
             form,
+            show_confirmation: false,
         };
     },
     async mounted() {
         try {
             // get product data
-            const response = await axios.get(route('product.show', 1));
+            const response = await axios.get(route('product.show', this.product_id));
             this.product = response.data;
 
             this.form.name = this.product.data.name;
@@ -80,9 +99,18 @@ export default {
                 onSuccess: () => this.$inertia.get(route('product.index'))
             });
         },
+        async deleteItem() {
+            try {
+                await axios.delete(route('product.destroy', this.product.data.id));
+                this.show_confirmation = false;
+                this.$inertia.get(route('spa-product.index'));
+            } catch (error) {
+                console.log(error);
+            }
+        }
     },
     props: {
-        product_id: Number,
+        product_id: String,
     },
     components: {
         AppLayout,
@@ -90,6 +118,8 @@ export default {
         PrimaryButton,
         InputLabel,
         InputError,
+        DangerButton,
+        ConfirmationModal
     },
 }
 </script>

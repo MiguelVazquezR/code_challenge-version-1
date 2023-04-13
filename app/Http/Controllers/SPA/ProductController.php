@@ -34,8 +34,8 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($product_id)
     {
-        return inertia('Product/Edit');
+        return inertia('Product/Edit', compact('product_id'));
     }
 }

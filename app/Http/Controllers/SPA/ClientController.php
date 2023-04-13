@@ -34,8 +34,8 @@ class ClientController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($client_id)
     {
-        return inertia('Client/Edit');
+        return inertia('Client/Edit', compact('client_id'));
     }
 }

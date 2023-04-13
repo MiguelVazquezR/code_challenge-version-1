@@ -34,8 +34,8 @@ class SupplierController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($supplier_id)
     {
-        return inertia('Supplier/Edit');
+        return inertia('Supplier/Edit', compact('supplier_id'));
     }
 }

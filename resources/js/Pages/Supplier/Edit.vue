@@ -12,12 +12,27 @@
                         <input type="text" v-model="form.name" class="input w-full" required>
                         <InputError :message="form.errors.name" />
                     </div>
-                    <div class="flex justify-end">
-                        <PrimaryButton class="mt-3" :disabled="form.processing">Actualizar</PrimaryButton>
+                    <div class="flex justify-end mt-3">
+                        <DangerButton @click="show_confirmation = true">Eliminar</DangerButton>
+                        <PrimaryButton class="ml-1" :disabled="form.processing">Actualizar</PrimaryButton>
                     </div>
                 </form>
             </div>
         </div>
+
+        <!-- confirmation modal -->
+        <ConfirmationModal :show="show_confirmation" @close="show_confirmation = false">
+            <template #title>
+                Eliminar registro
+            </template>
+            <template #content>
+                ¿Desea continuar con la eliminación?
+            </template>
+            <template #footer>
+                <DangerButton @click="deleteItem">Eliminar</DangerButton>
+                <SecondaryButton @click="show_confirmation = false" class="ml-1">Cancelar</SecondaryButton>
+            </template>
+        </ConfirmationModal>
     </AppLayout>
 </template>
 
@@ -26,9 +41,12 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import { useForm } from '@inertiajs/vue3';
+import axios from 'axios';
 
 export default {
     data() {
@@ -39,12 +57,13 @@ export default {
         return {
             supplier: [],
             form,
+            show_confirmation: false,
         };
     },
     async mounted() {
         try {
             // get supplier data
-            const response = await axios.get(route('supplier.show', 1));
+            const response = await axios.get(route('supplier.show', this.supplier_id));
             this.supplier = response.data;
 
             this.form.name = this.supplier.data.name;
@@ -58,9 +77,18 @@ export default {
                 onSuccess: () => this.$inertia.get(route('supplier.index'))
             });
         },
+        async deleteItem() {
+            try {
+                await axios.delete(route('supplier.destroy', this.supplier.data.id));
+                this.show_confirmation = false;
+                this.$inertia.get(route('spa-supplier.index'));
+            } catch (error) {
+                console.log(error);
+            }
+        }
     },
     props: {
-        supplier_id: Number,
+        supplier_id: String,
     },
     components: {
         AppLayout,
@@ -68,6 +96,8 @@ export default {
         PrimaryButton,
         InputLabel,
         InputError,
+        DangerButton,
+        ConfirmationModal
     },
 }
 </script>

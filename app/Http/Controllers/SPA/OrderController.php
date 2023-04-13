@@ -34,8 +34,8 @@ class OrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($order_id)
     {
-        return inertia('Order/Edit');
+        return inertia('Order/Edit', compact('order_id'));
     }
 }
