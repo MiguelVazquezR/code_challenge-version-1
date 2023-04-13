@@ -40,7 +40,7 @@ const menues = [
     {
         label: 'Ordenes',
         route_name: 'spa-order.index',
-        route_active: 'spa-orders.*',
+        route_active: 'spa-order.*',
     },
     {
         label: 'Proveedores',
